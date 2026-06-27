@@ -1,6 +1,8 @@
-<<<<<<< HEAD
 import React from "react";
 import { useState } from "react";
+import ConfessionForm from "./Component/ConfessionForm";
+import ConfessionList from "./Component/ConfessionList";
+import { LuMoonStar } from "react-icons/lu";
 
 function App() {
   const [confession, setConfession] = useState([]);
@@ -11,25 +13,21 @@ function App() {
   function clickSubmit(e) {
     e.preventDefault();
 
-    if (text == "") {
+    if (!text.trim()) {
       return;
     }
-    if (text != text.trim()) {
+
+    if (text.length > maxChar) {
       return;
     }
-    if (text.length > 200) {
-      return `max length exceeded`;
-    }
 
-    const newConfession = [
-      {
-        id: Date.now(),
-        text: { text },
-        likes: 0,
-      },
-    ];
+    const newConfession = {
+      id: Date.now(),
+      text: text.trim(),
+      likes: 0,
+    };
 
-    setConfession([...newConfession, confession]);
+    setConfession([newConfession, ...confession]);
 
     setText("");
   }
@@ -46,73 +44,40 @@ function App() {
     setConfession(updatedConfession);
   }
 
-  return <div>jojooo</div>;
-}
-
-export default App;
-=======
-import { useState } from "react";
-import react from "react";
-import ConfessionList from "./Component/ConfessionList";
-import ConfessionCard from "./Component/ConfessionCard";
-
-
-function App() {
-        //state
-  const [confessions, setConfessions] = useState([]);
-  const [text, setText] = useState("");
-
-        //Handler function
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (text.trim() === "") return;
-
-    const newConfession = {
-      id: Date.now(),
-      text: text,
-      likes: 0,
-    };
-
-    setConfessions([newConfession, ...confessions]);
-    setText("");
-  };
-
-  const handleLike = (id) => {
-    setConfessions(
-      confessions.map((confession) => {
-        if (confession.id === id) {
-          return { ...confession, likes: confession.likes + 1 };
-        } else {
-          return confession;
-        }
-      })
+  function clickDelete(id) {
+    const updatedConfession = confession.filter(
+      (confession) => confession.id !== id,
     );
-  };
 
-  const handleDelete = (id) => {
-    setConfessions(
-      confessions.filter((confession) => confession.id !== id)
-    );
-  };
+    setConfession(updatedConfession);
+  }
 
-          // Renders on Screen
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
-      <h1 className="text-3xl text-white font-bold text-center mb-8">
-        🙈 Anonymous Confessions
-      </h1>
-
-      {/* The form will go here — needs the text state + handleSubmit */}
-
-      <ConfessionList
-        confessions={confessions}
-        onLike={handleLike}
-        onDelete={handleDelete}
-      />
+    <div className="min-h-screen bg-[#08080F] px-4 py-6 md:py-12">
+      <div className="max-w-2xl mx-auto">
+        <div className=" flex flex-col justify-center text-center text-white  mb-8">
+          <div className=" flex items-center justify-center text-3xl ">
+            <LuMoonStar />
+          </div>
+          <h1 className="text-3xl font-bold mt-4 mb-2">Confession Board</h1>
+          <p className="leading-relaxed text-[15px] text-[#847F7B]">
+            A space to let things go. Speak freely, listen kindly. Everyone here
+            is anonymous ---- including you.
+          </p>
+        </div>
+        <ConfessionForm
+          text={text}
+          setText={setText}
+          clickSubmit={clickSubmit}
+        />
+        <ConfessionList
+          confessions={confession}
+          clickLike={clickLike}
+          clickDelete={clickDelete}
+        />
+      </div>
     </div>
   );
 }
 
 export default App;
->>>>>>> 5ebcdba3adf1f1480397417b826cda2d4cc5fd7c
